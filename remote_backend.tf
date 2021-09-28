@@ -3,7 +3,7 @@ terraform {
     hostname = "app.terraform.io"
     organization = "cisco-cxjp"
     workspaces {
-      name = "ws1"
+      name = "ws2"
     }
   }
 }
