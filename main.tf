@@ -21,8 +21,8 @@ data "vsphere_compute_cluster" "cluster" {
 }
 
 data "vsphere_network" "network" {
-  #name          = "vm-network-501"
   name          = "DPortGroup-VMNetwork"
+  #name          = "vm-network-501"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
@@ -36,7 +36,7 @@ resource "vsphere_virtual_machine" "vm" {
   resource_pool_id = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
 
-  num_cpus = 2
+  num_cpus = 1
   memory   = 1024
   guest_id = "${data.vsphere_virtual_machine.template.guest_id}"
 
@@ -56,6 +56,14 @@ resource "vsphere_virtual_machine" "vm" {
 
   clone {
     template_uuid = "${data.vsphere_virtual_machine.template.id}"
+
+    customize {
+      linux_options {
+        host_name = "${var.vm_name}"
+        domain    = "v501.cisco.com"
+      }
+      network_interface {}
+    }
 
   }
 }
