@@ -11,7 +11,7 @@ data "vsphere_datacenter" "dc" {
 }
 
 data "vsphere_datastore" "datastore" {
-  name          = "ds1"
+  name          = "ds2"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
@@ -27,12 +27,15 @@ data "vsphere_network" "network" {
 }
 
 data "vsphere_virtual_machine" "template" {
-  name          = "vm3"
+  name          = "vm-template"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 resource "vsphere_virtual_machine" "vm" {
-  name             = "${var.vm_name}"
+
+  for_each = var.vms
+
+  name             = each.value.name
   resource_pool_id = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
 
@@ -57,13 +60,13 @@ resource "vsphere_virtual_machine" "vm" {
   clone {
     template_uuid = "${data.vsphere_virtual_machine.template.id}"
 
-    customize {
-      linux_options {
-        host_name = "${var.vm_name}"
-        domain    = "v501.cisco.com"
-      }
-      network_interface {}
-    }
+    #customize {
+    #  linux_options {
+    #    host_name = "${var.vm_name}"
+    #    domain    = "v501.cisco.com"
+    #  }
+    #  network_interface {}
+    #}
 
   }
 }
