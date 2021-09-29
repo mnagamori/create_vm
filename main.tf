@@ -21,7 +21,8 @@ data "vsphere_compute_cluster" "cluster" {
 }
 
 data "vsphere_network" "network" {
-  name          = "vm-network-501"
+  #name          = "vm-network-501"
+  name          = "DPortGroup-VMNetwork"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
